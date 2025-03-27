@@ -1,0 +1,631 @@
+openapi: 3.1.0
+info:
+  title: Book Service APIs
+  description: "This lists all the Book Service API Calls. The Calls are OAuth2 secured,\
+    \ so please use your client ID and Secret to test them out."
+  version: v1.0
+servers:
+  - url: http://localhost:9001
+tags:
+  - name: Book
+    description: Book management APIs
+paths:
+  /api/v1/books/{isbn}:
+    get:
+      tags:
+        - Book
+      summary: View the book by isbn
+      operationId: getBookByISBN
+      parameters:
+        - name: x-b3-traceid
+          in: header
+          description: "Also known as a Correlation ID, is a unique identifier value\
+          \ that is attached to requests and Notifications that allow reference to\
+          \ a particular business transaction or event chain across multiple integration\
+          \ tiers.  x-b3-traceid header is automatically generated/passed through\
+          \ when Spring Cloud Sleuth is included as a dependency. Sleuth is a transitive\
+          \ dependency of Chassis.  If project team needs to create trace id  their\
+          \ own , it has to be 16 digit hexadecimal number(64 bit, since digit in\
+          \ hexadecimal represents 4 bits) e.g. 71200de3d3f82a83 as supported by Chassis."
+          required: true
+          schema:
+            type: string
+        - name: x-b3-spanid
+          in: header
+          description: "This header represents root span id. The span represents a basic\
+          \ unit of work.  Span is the primary building block of a distributed trace,\
+          \ representing an individual unit of work done in a distributed system.\
+          \ Spans will contain ?References? to other spans, which allows multiple\
+          \ Spans to be assembled into one complete Trace - a visualization of the\
+          \ life of a request as it moves through a distributed system. The trace\
+          \ id (x-b3-traceid) contains a set of span ids, forming a tree-like structure.\
+          \ The trace id will remain the same as one micro service calls the next.\
+          \ Spans have parent-child relationships. This span id creates parent-child\
+          \ relationship with the child spans to generate a trace tree out of all\
+          \ the spans for a request. If project team needs to create span id  their\
+          \ own , it has to be 16 digit hexadecimal number(64 bit, since digit in\
+          \ hexadecimal represents 4 bits) e.g. 71200de3d3f82a83 as supported by Chassis.\
+          \  "
+          required: true
+          schema:
+            type: string
+        - name: isbn
+          in: path
+          description: The isbn.
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddBookResponseModel"
+        "400":
+          description: Indicates that the server could not understand the request.
+            This is not the same as 422 which indicates a validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "422":
+          description: The request was syntactically correct but was not semantically
+            correct. Usually indicating a validation problem.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "403":
+          description: The principal associated with the request does not have sufficient
+            rights to preform this operation on the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "404":
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "200":
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddBookResponseModel"
+        "401":
+          description: Unauthorized.  This will be returned when no authentication
+            information is provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+      security:
+        - oAuth2ClientCredentials:
+            - application.automotive-credit-requests.bcvc.create-credit-requests.read
+    put:
+      tags:
+        - Book
+      summary: Edit a Book
+      operationId: editBook
+      parameters:
+        - name: x-b3-traceid
+          in: header
+          description: "Also known as a Correlation ID, is a unique identifier value\
+          \ that is attached to requests and Notifications that allow reference to\
+          \ a particular business transaction or event chain across multiple integration\
+          \ tiers.  x-b3-traceid header is automatically generated/passed through\
+          \ when Spring Cloud Sleuth is included as a dependency. Sleuth is a transitive\
+          \ dependency of Chassis.  If project team needs to create trace id  their\
+          \ own , it has to be 16 digit hexadecimal number(64 bit, since digit in\
+          \ hexadecimal represents 4 bits) e.g. 71200de3d3f82a83 as supported by Chassis."
+          required: true
+          schema:
+            type: string
+        - name: x-b3-spanid
+          in: header
+          description: "This header represents root span id. The span represents a basic\
+          \ unit of work.  Span is the primary building block of a distributed trace,\
+          \ representing an individual unit of work done in a distributed system.\
+          \ Spans will contain ?References? to other spans, which allows multiple\
+          \ Spans to be assembled into one complete Trace - a visualization of the\
+          \ life of a request as it moves through a distributed system. The trace\
+          \ id (x-b3-traceid) contains a set of span ids, forming a tree-like structure.\
+          \ The trace id will remain the same as one micro service calls the next.\
+          \ Spans have parent-child relationships. This span id creates parent-child\
+          \ relationship with the child spans to generate a trace tree out of all\
+          \ the spans for a request. If project team needs to create span id  their\
+          \ own , it has to be 16 digit hexadecimal number(64 bit, since digit in\
+          \ hexadecimal represents 4 bits) e.g. 71200de3d3f82a83 as supported by Chassis.\
+          \  "
+          required: true
+          schema:
+            type: string
+        - name: isbn
+          in: path
+          description: The isbn.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookRequestModel"
+        required: true
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddBookResponseModel"
+        "400":
+          description: Indicates that the server could not understand the request.
+            This is not the same as 422 which indicates a validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "422":
+          description: The request was syntactically correct but was not semantically
+            correct. Usually indicating a validation problem.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "403":
+          description: The principal associated with the request does not have sufficient
+            rights to preform this operation on the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "404":
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "200":
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddBookResponseModel"
+        "401":
+          description: Unauthorized.  This will be returned when no authentication
+            information is provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+      security:
+        - oAuth2ClientCredentials:
+            - application.automotive-credit-requests.bcvc.create-credit-requests.write
+    delete:
+      tags:
+        - Book
+      summary: Delete a Book
+      operationId: removeBook
+      parameters:
+        - name: x-b3-traceid
+          in: header
+          description: "Also known as a Correlation ID, is a unique identifier value\
+          \ that is attached to requests and Notifications that allow reference to\
+          \ a particular business transaction or event chain across multiple integration\
+          \ tiers.  x-b3-traceid header is automatically generated/passed through\
+          \ when Spring Cloud Sleuth is included as a dependency. Sleuth is a transitive\
+          \ dependency of Chassis.  If project team needs to create trace id  their\
+          \ own , it has to be 16 digit hexadecimal number(64 bit, since digit in\
+          \ hexadecimal represents 4 bits) e.g. 71200de3d3f82a83 as supported by Chassis."
+          required: true
+          schema:
+            type: string
+        - name: x-b3-spanid
+          in: header
+          description: "This header represents root span id. The span represents a basic\
+          \ unit of work.  Span is the primary building block of a distributed trace,\
+          \ representing an individual unit of work done in a distributed system.\
+          \ Spans will contain ?References? to other spans, which allows multiple\
+          \ Spans to be assembled into one complete Trace - a visualization of the\
+          \ life of a request as it moves through a distributed system. The trace\
+          \ id (x-b3-traceid) contains a set of span ids, forming a tree-like structure.\
+          \ The trace id will remain the same as one micro service calls the next.\
+          \ Spans have parent-child relationships. This span id creates parent-child\
+          \ relationship with the child spans to generate a trace tree out of all\
+          \ the spans for a request. If project team needs to create span id  their\
+          \ own , it has to be 16 digit hexadecimal number(64 bit, since digit in\
+          \ hexadecimal represents 4 bits) e.g. 71200de3d3f82a83 as supported by Chassis.\
+          \  "
+          required: true
+          schema:
+            type: string
+        - name: isbn
+          in: path
+          description: The isbn.
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Indicates that the server could not understand the request.
+            This is not the same as 422 which indicates a validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "422":
+          description: The request was syntactically correct but was not semantically
+            correct. Usually indicating a validation problem.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "200":
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: string
+        "403":
+          description: The principal associated with the request does not have sufficient
+            rights to preform this operation on the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "404":
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "401":
+          description: Unauthorized.  This will be returned when no authentication
+            information is provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+      security:
+        - oAuth2ClientCredentials:
+            - application.automotive-credit-requests.bcvc.create-credit-requests.write
+  /api/v1/books:
+    get:
+      tags:
+        - Book
+      summary: View all books
+      operationId: getAllBooks
+      parameters:
+        - name: x-b3-traceid
+          in: header
+          description: "Also known as a Correlation ID, is a unique identifier value\
+          \ that is attached to requests and Notifications that allow reference to\
+          \ a particular business transaction or event chain across multiple integration\
+          \ tiers.  x-b3-traceid header is automatically generated/passed through\
+          \ when Spring Cloud Sleuth is included as a dependency. Sleuth is a transitive\
+          \ dependency of Chassis.  If project team needs to create trace id  their\
+          \ own , it has to be 16 digit hexadecimal number(64 bit, since digit in\
+          \ hexadecimal represents 4 bits) e.g. 71200de3d3f82a83 as supported by Chassis."
+          required: true
+          schema:
+            type: string
+        - name: x-b3-spanid
+          in: header
+          description: "This header represents root span id. The span represents a basic\
+          \ unit of work.  Span is the primary building block of a distributed trace,\
+          \ representing an individual unit of work done in a distributed system.\
+          \ Spans will contain ?References? to other spans, which allows multiple\
+          \ Spans to be assembled into one complete Trace - a visualization of the\
+          \ life of a request as it moves through a distributed system. The trace\
+          \ id (x-b3-traceid) contains a set of span ids, forming a tree-like structure.\
+          \ The trace id will remain the same as one micro service calls the next.\
+          \ Spans have parent-child relationships. This span id creates parent-child\
+          \ relationship with the child spans to generate a trace tree out of all\
+          \ the spans for a request. If project team needs to create span id  their\
+          \ own , it has to be 16 digit hexadecimal number(64 bit, since digit in\
+          \ hexadecimal represents 4 bits) e.g. 71200de3d3f82a83 as supported by Chassis.\
+          \  "
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetAllBookResponseModel"
+        "400":
+          description: Indicates that the server could not understand the request.
+            This is not the same as 422 which indicates a validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "422":
+          description: The request was syntactically correct but was not semantically
+            correct. Usually indicating a validation problem.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "403":
+          description: The principal associated with the request does not have sufficient
+            rights to preform this operation on the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "404":
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "200":
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetAllBookResponseModel"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "401":
+          description: Unauthorized.  This will be returned when no authentication
+            information is provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+      security:
+        - oAuth2ClientCredentials:
+            - application.automotive-credit-requests.bcvc.create-credit-requests.read
+    post:
+      tags:
+        - Book
+      summary: Add a Book
+      operationId: addBook
+      parameters:
+        - name: x-b3-traceid
+          in: header
+          description: "Also known as a Correlation ID, is a unique identifier value\
+          \ that is attached to requests and Notifications that allow reference to\
+          \ a particular business transaction or event chain across multiple integration\
+          \ tiers.  x-b3-traceid header is automatically generated/passed through\
+          \ when Spring Cloud Sleuth is included as a dependency. Sleuth is a transitive\
+          \ dependency of Chassis.  If project team needs to create trace id  their\
+          \ own , it has to be 16 digit hexadecimal number(64 bit, since digit in\
+          \ hexadecimal represents 4 bits) e.g. 71200de3d3f82a83 as supported by Chassis."
+          required: true
+          schema:
+            type: string
+        - name: x-b3-spanid
+          in: header
+          description: "This header represents root span id. The span represents a basic\
+          \ unit of work.  Span is the primary building block of a distributed trace,\
+          \ representing an individual unit of work done in a distributed system.\
+          \ Spans will contain ?References? to other spans, which allows multiple\
+          \ Spans to be assembled into one complete Trace - a visualization of the\
+          \ life of a request as it moves through a distributed system. The trace\
+          \ id (x-b3-traceid) contains a set of span ids, forming a tree-like structure.\
+          \ The trace id will remain the same as one micro service calls the next.\
+          \ Spans have parent-child relationships. This span id creates parent-child\
+          \ relationship with the child spans to generate a trace tree out of all\
+          \ the spans for a request. If project team needs to create span id  their\
+          \ own , it has to be 16 digit hexadecimal number(64 bit, since digit in\
+          \ hexadecimal represents 4 bits) e.g. 71200de3d3f82a83 as supported by Chassis.\
+          \  "
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookRequestModel"
+        required: true
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddBookResponseModel"
+        "400":
+          description: Indicates that the server could not understand the request.
+            This is not the same as 422 which indicates a validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "422":
+          description: The request was syntactically correct but was not semantically
+            correct. Usually indicating a validation problem.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "403":
+          description: The principal associated with the request does not have sufficient
+            rights to preform this operation on the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "404":
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+        "200":
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddBookResponseModel"
+        "401":
+          description: Unauthorized.  This will be returned when no authentication
+            information is provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyDataResponse"
+      security:
+        - oAuth2ClientCredentials:
+            - application.automotive-credit-requests.bcvc.create-credit-requests.write
+components:
+  schemas:
+    AddBookResponseModel:
+      type: object
+      properties:
+        data:
+          $ref: "#/components/schemas/BookResponseModel"
+        notifications:
+          type: array
+          items:
+            $ref: "#/components/schemas/NotificationResponse"
+    BookResponseModel:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        isbn:
+          type: string
+        title:
+          type: string
+        author:
+          type: string
+        price:
+          type: number
+    NotificationResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        source:
+          type: string
+        severity:
+          type: string
+        message:
+          type: string
+        uuid:
+          type: string
+          format: uuid
+        notification_dt:
+          type: string
+          format: date-time
+    BookRequestModel:
+      type: object
+      description: The Book information
+      properties:
+        isbn:
+          type: string
+        title:
+          type: string
+        author:
+          type: string
+        price:
+          type: number
+      required:
+        - author
+        - isbn
+        - price
+        - title
+    EmptyDataResponse:
+      type: object
+      properties:
+        data:
+          type: string
+        notifications:
+          type: array
+          items:
+            $ref: "#/components/schemas/Notification"
+    Notification:
+      type: object
+      properties:
+        category:
+          type: string
+        code:
+          type: string
+        message:
+          type: string
+        description:
+          type: string
+        action:
+          type: string
+        metadata:
+          type: object
+          additionalProperties:
+            type: object
+        uuid:
+          type: string
+        notification_dt:
+          type: string
+          format: date-time
+        severity:
+          type: string
+        field_name:
+          type: string
+    GetAllBookResponseModel:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/BookResponseModel"
+        notifications:
+          type: array
+          items:
+            $ref: "#/components/schemas/NotificationResponse"
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: Oauth 2 Client Credential
+      flows:
+        clientCredentials:
+          tokenUrl: http://localhost:9000/realms/Microservices-demo-realm/protocol/openid-connect/token
+          scopes:
+            application.automotive-credit-requests.bcvc.create-credit-requests.write: Create
+              Credit Request
+            application.automotive-credit-requests.bcvc.get-credit-requests.read: Retrieve
+              Credit Request
