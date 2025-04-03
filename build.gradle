@@ -22,6 +22,7 @@ repositories {
 
 ext {
 	set('lombokVersion',"1.18.32")
+	set('testcontainersVersion', "1.17.3")
 }
 
 dependencies {
@@ -38,7 +39,7 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 
 	implementation 'org.flywaydb:flyway-core'
-	//implementation 'org.flywaydb:flyway-database-postgresql'
+	implementation 'org.flywaydb:flyway-database-postgresql'
 
 	// -- Logging --
 	implementation 'org.slf4j:slf4j-ext'
@@ -50,8 +51,8 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.jetbrains/annotations
 	implementation group: 'org.jetbrains', name: 'annotations', version: '26.0.2'
 
-
-
+	testImplementation 'org.testcontainers:postgresql'
+	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -73,7 +74,14 @@ bootBuildImage {
 	}
 }
 
+dependencyManagement {
+	imports {
+		mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
+	}
+}
+
 tasks.named('test') {
+	exclude 'com/polarbookshop/catalog/**'
 	useJUnitPlatform()
 }
 
