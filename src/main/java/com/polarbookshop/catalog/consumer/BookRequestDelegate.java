@@ -1,5 +1,6 @@
 package com.polarbookshop.catalog.consumer;
 
+import com.polarbookshop.catalog.entity.PolarBookshopPageProjection;
 import com.polarbookshop.catalog.model.consumer.rest.AddBookResponseModel;
 import com.polarbookshop.catalog.model.consumer.rest.BookRequestModel;
 import com.polarbookshop.catalog.model.consumer.rest.BookResponseModel;
@@ -7,6 +8,7 @@ import com.polarbookshop.catalog.operation.*;
 import com.polarbookshop.catalog.shared.rest.RestConsumerRequest;
 import com.polarbookshop.catalog.shared.rest.RestConsumerResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -18,22 +20,30 @@ public class BookRequestDelegate {
     private final GetBookOperationByIsbn getBookOperationByIsbn;
     private final EditBookOperation editBookOperation;
     private final RemoveBookOperation removeBookOperation;
+    private final GetPagableBooksOperation getPagableBooksOperation;
 
     public BookRequestDelegate(
             @Qualifier("addBookOperation") AddBookOperation addBookOperation,
             @Qualifier("getAllBooksOperation") GetAllBooksOperation getAllBooksOperation,
             @Qualifier("getBookOperationByIsbn") GetBookOperationByIsbn getBookOperationByIsbn,
             @Qualifier("editBookOperation") EditBookOperation editBookOperation,
-            @Qualifier("removeBookOperation") RemoveBookOperation removeBookOperation) {
+            @Qualifier("removeBookOperation") RemoveBookOperation removeBookOperation,
+            GetPagableBooksOperation getPagableBooksOperation
+    ) {
         this.addBookOperation = addBookOperation;
         this.getAllBooksOperation = getAllBooksOperation;
         this.getBookOperationByIsbn = getBookOperationByIsbn;
         this.editBookOperation = editBookOperation;
         this.removeBookOperation = removeBookOperation;
+        this.getPagableBooksOperation = getPagableBooksOperation;
     }
 
     public ResponseEntity<RestConsumerResponse<BookResponseModel>> addBook(RestConsumerRequest<BookRequestModel> restConsumerRequest) {
         return addBookOperation.handle(restConsumerRequest).entity();
+    }
+
+    public ResponseEntity<RestConsumerResponse<Page<PolarBookshopPageProjection>>> getPageableBookList(RestConsumerRequest<Void> restConsumerRequest) {
+        return getPagableBooksOperation.handle(restConsumerRequest).entity();
     }
 
     public ResponseEntity<RestConsumerResponse<Iterable<BookResponseModel>>> getAllBooks(RestConsumerRequest<Void> restConsumerRequest) {

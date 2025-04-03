@@ -12,7 +12,7 @@ version = '0.0.1-SNAPSHOT'
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(23)
+		languageVersion = JavaLanguageVersion.of(17)
 	}
 }
 
@@ -34,6 +34,12 @@ dependencies {
 	implementation "javax.annotation:javax.annotation-api:1.3.2"
 	implementation "com.google.code.findbugs:jsr305:3.0.0"
 
+	implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+	runtimeOnly 'org.postgresql:postgresql'
+
+	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-database-postgresql'
+
 	// -- Logging --
 	implementation 'org.slf4j:slf4j-ext'
 
@@ -44,9 +50,27 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.jetbrains/annotations
 	implementation group: 'org.jetbrains', name: 'annotations', version: '26.0.2'
 
+
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+bootBuildImage {
+	imageName = "${project.name}"
+	environment = [
+			'HTTP_PROXY' : 'http.docker.internal:3128',
+			'HTTPS_PROXY' : 'http.docker.internal:3128',
+			'BP_JVM_VERSION' : '17.*'
+	]
+	docker {
+		publishRegistry {
+			username = project.findProperty("registryUsername")
+			password = project.findProperty("registryToken")
+			url = project.findProperty("registryUrl")
+		}
+	}
 }
 
 tasks.named('test') {
@@ -93,7 +117,7 @@ sonar {
 		property 'sonar.projectKey', 'polar-bookshop'
 		property 'sonar.host.url', 'http://localhost:9000'
 
-		property 'sonar.java.source', '21'
+		property 'sonar.java.source', '17'
 
 		property 'sonar.exclusions', coverageExclusions
 		property 'sonar.coverage.exclusions', coverageExclusions

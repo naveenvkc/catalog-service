@@ -27,6 +27,56 @@ public class BookExceptionController {
     private static final String X_FRAME_OPTIONS = "X-Frame-Options";
     private static final String STRICT_TRANSPORT_SECURITY = "Strict-Transport-Security";
 
+    @ExceptionHandler(BookNotFoundException.class)
+    public final ResponseEntity<EmptyDataResponse> handleBookNotFoundExceptions(
+            BookNotFoundException ex
+    ) {
+        LOG.error(event -> event.message("BookNotFoundException : CatalogBusinessException Generic Exception.")
+                .with("ExceptionMessage", ex.getMessage())
+                .with("ExceptionLocalizedMessage", ex.getLocalizedMessage())
+                .with("PolarExceptionHandler", "CatalogBusinessException")
+                .tag("CatalogBusinessException"));
+
+        EmptyDataResponse error = new EmptyDataResponse();
+        List<Notification> notifications = new ArrayList<>();
+        Notification notification = new Notification();
+        notification.setCode("E001");
+        notification.setSeverity("ERROR");
+        notification.setDescription(ex.getMessage());
+        notification.setMessage(ex.getMessage());
+        notification.setUuid(UUID.randomUUID().toString());
+        notification.setNotificationDt(OffsetDateTime.now());
+
+        notifications.add(notification);
+        error.setNotifications(notifications);
+        return new ResponseEntity<>(error, getResponseHeaders(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(BookAlreadyExistsException.class)
+    public final ResponseEntity<EmptyDataResponse> handleBookAlreadyExistsExceptions(
+            BookAlreadyExistsException ex
+    ) {
+        LOG.error(event -> event.message("BookAlreadyExistsException : CatalogBusinessException Generic Exception.")
+                .with("ExceptionMessage", ex.getMessage())
+                .with("ExceptionLocalizedMessage", ex.getLocalizedMessage())
+                .with("PolarExceptionHandler", "CatalogBusinessException")
+                .tag("CatalogBusinessException"));
+
+        EmptyDataResponse error = new EmptyDataResponse();
+        List<Notification> notifications = new ArrayList<>();
+        Notification notification = new Notification();
+        notification.setCode("E001");
+        notification.setSeverity("ERROR");
+        notification.setDescription(ex.getMessage());
+        notification.setMessage(ex.getMessage());
+        notification.setUuid(UUID.randomUUID().toString());
+        notification.setNotificationDt(OffsetDateTime.now());
+
+        notifications.add(notification);
+        error.setNotifications(notifications);
+        return new ResponseEntity<>(error, getResponseHeaders(), HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public final ResponseEntity<EmptyDataResponse> handleValidationExceptions(
             MethodArgumentNotValidException ex
