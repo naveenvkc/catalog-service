@@ -54,6 +54,8 @@ public class EditBookOperation implements IOperation<RestConsumerRequest<BookReq
                 .price(bookRequest.getPrice())
                 .createdDate(existingBookEntity.getCreatedDate())
                 .lastModifiedDate(existingBookEntity.getLastModifiedDate())
+                .createdBy(existingBookEntity.getCreatedBy())
+                .lastModifiedBy(existingBookEntity.getLastModifiedBy())
                 .version(existingBookEntity.getVersion())
                 .build();
 

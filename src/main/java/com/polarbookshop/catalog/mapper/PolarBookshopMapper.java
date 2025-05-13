@@ -28,6 +28,10 @@ public class PolarBookshopMapper {
                 .title(entity.getTitle())
                 .price(entity.getPrice())
                 .author(entity.getAuthor())
+                .createdBy(entity.getCreatedBy())
+                .modifiedBy(entity.getLastModifiedBy())
+                .createdDate(entity.getCreatedDate())
+                .modifiedDate(entity.getLastModifiedDate())
                 .build();
     }
 

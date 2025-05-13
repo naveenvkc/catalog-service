@@ -51,6 +51,8 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.jetbrains/annotations
 	implementation group: 'org.jetbrains', name: 'annotations', version: '26.0.2'
 
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+
 	testImplementation 'org.testcontainers:postgresql'
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

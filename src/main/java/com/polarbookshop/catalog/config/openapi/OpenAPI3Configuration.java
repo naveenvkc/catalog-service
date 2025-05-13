@@ -15,8 +15,8 @@ import io.swagger.v3.oas.annotations.servers.Server;
         version = "v1.0"))
 @SecurityScheme(name = "oAuth2ClientCredentials", type = SecuritySchemeType.OAUTH2, description="Oauth 2 Client Credential",
         flows = @OAuthFlows(clientCredentials  = @OAuthFlow(tokenUrl = "${openapi.oAuthFlow.tokenUrl}",
-                scopes = {@OAuthScope(name = "application.automotive-credit-requests.bcvc.create-credit-requests.write", description = "Create Credit Request"),
-                        @OAuthScope(name = "application.automotive-credit-requests.bcvc.get-credit-requests.read", description = "Retrieve Credit Request")}
+                scopes = {@OAuthScope(name = "employee", description = "Manage books"),
+                        @OAuthScope(name = "customer", description = "Retrieve books")}
                 )))
 public class OpenAPI3Configuration {
 }
