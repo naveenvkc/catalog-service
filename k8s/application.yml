@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://polar-postgres/polardb_catalog?currentSchema=polar_bookshop
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://polar-keycloak/realms/PolarBookshop
+  #config:
+    #import: configtree:/workspace/secrets/*/

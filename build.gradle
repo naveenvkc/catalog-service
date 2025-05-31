@@ -23,6 +23,7 @@ repositories {
 ext {
 	set('lombokVersion',"1.18.32")
 	set('testcontainersVersion', "1.17.3")
+	set('otelVersion', "1.17.0")
 }
 
 dependencies {
@@ -52,6 +53,10 @@ dependencies {
 	implementation group: 'org.jetbrains', name: 'annotations', version: '26.0.2'
 
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+	runtimeOnly "io.opentelemetry.javaagent:opentelemetry-javaagent:${otelVersion}"
 
 	testImplementation 'org.testcontainers:postgresql'
 	testImplementation 'org.testcontainers:junit-jupiter'

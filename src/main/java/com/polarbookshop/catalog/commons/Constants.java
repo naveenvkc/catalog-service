@@ -13,4 +13,7 @@ public class Constants {
 
     public static final String PAGE_DEFAULT = "0";
     public static final String SIZE_DEFAULT = "25";
+
+    public static final String CORRELATION_ID_HEADER = "X-Correlation-ID";
+    public static final String CORRELATION_ID_KEY = "correlationID";
 }

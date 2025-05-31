@@ -33,7 +33,7 @@ public class GetAllBooksOperation implements IOperation<RestConsumerRequest<Void
     }
 
     private RestConsumerResponse<Iterable<BookResponseModel>> prepareConsumerResponse(RestConsumerRequest<Void> consumerRequest) {
-        LOG.info(e -> e.tag(LIFECYCLE).message("Entered GetAllBooksOperation.prepareConsumerResponse Operation"));
+        LOG.info(e -> e.tag(LIFECYCLE).message("Entered GetAllBooksOperation.prepareConsumerResponse Operation for fetching list of books"));
         Iterable<BookResponseModel> consumerResponse =
                 PolarBookshopMapper.mapEntitiesToResponse(bookRepository.findAll());
         return RestConsumerResponse.of(consumerResponse, HttpStatus.OK);

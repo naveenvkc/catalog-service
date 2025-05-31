@@ -28,8 +28,23 @@ spring:
           issuer-uri: http://localhost:8080/realms/PolarBookshop
 
 logging:
-  level:
-    root: info
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+      probes:
+        enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 openapi:
   oAuthFlow:
