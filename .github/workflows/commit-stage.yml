@@ -14,6 +14,9 @@ jobs:
       contents: read
       security-events: write
     steps:
+      - name: Set current date as env variable
+        id: date
+        run: echo "date=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
       - name: Checkout source code
         uses: actions/checkout@v3
       - name: Set up JDK
@@ -67,12 +70,12 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew bootBuildImage \
-            --imageName ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+            --imageName ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.date }}-${{ env.VERSION }}
       - name: OCI image vulnerability scanning
         uses: anchore/scan-action@v3
         id: scan
         with:
-          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.date }}-${{ env.VERSION }}
           fail-build: false
           severity-cutoff: high
           acs-report-enable: true
@@ -88,9 +91,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish container image
-        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.date }}-${{ env.VERSION }}
       - name: Publish container image (latest)
         run: |
-          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} \
+          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.date }}-${{ env.VERSION }} \
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
