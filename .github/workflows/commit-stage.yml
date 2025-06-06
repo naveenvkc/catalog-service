@@ -55,13 +55,15 @@ jobs:
       packages: write
       security-events: write
     steps:
-      - name: "Set current date as env variable"
+      - name: "Set current date and short sha as env variable"
         run: |
           echo "builddate=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
         id: version  # this is used on variable path
       - name: print date
         run: |
           echo ${{ steps.version.outputs.builddate }}
+          echo ${{ steps.version.outputs.sha_short }}
       - name: Checkout source code
         uses: actions/checkout@v3
       - name: Set up JDK
