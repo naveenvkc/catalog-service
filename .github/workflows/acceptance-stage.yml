@@ -7,10 +7,10 @@ on:
 concurrency: acceptance
 
 env:
-  OWNER: sunithanbh007github
+  OWNER: naveenvkc
   REGISTRY: ghcr.io
-  APP_REPO: catalog-service-1
-  DEPLOY_REPO: deployment-1
+  APP_REPO: catalog-service
+  DEPLOY_REPO: deployment
   VERSION: ${{ github.sha }}
 
 jobs:
